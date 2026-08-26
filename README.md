@@ -2,6 +2,10 @@
 
 a simple server that sits on your home pc, exposes a webpage that you can open on your phone (via tailscale), paste in a soudcloud track link, and have the server download it to your home pc, ready for when you get home. 
 
+when im out & about shazaming songs i usually like them on soundcloud, to come back to later & download. This tool allows me to send the url to my pc to download instantly so the mp3s are ready for me when i get home.
+
+uses yt-dlp under teh hood, so it works with Soundcloud & Youtube links.
+
 
 
 ## setup
@@ -15,6 +19,7 @@ a simple server that sits on your home pc, exposes a webpage that you can open o
         Where-Object { $_.FullName -match "Gyan.*FFmpeg|FFmpeg.*Gyan" }
 ```
 5. paste it in to `main.py` in the variable named `FFMPEG_LOCATION`
+6. follow MidnightCatFiesta on instgram and soundcloud! 😼
 
 ## run
 
@@ -29,3 +34,4 @@ a simple server that sits on your home pc, exposes a webpage that you can open o
 4. the track should appear on your pc in a downloads folder thats created wherever you ran python from 
 
 note: some tracks cant be downloaded due to DRM protection. 
+
