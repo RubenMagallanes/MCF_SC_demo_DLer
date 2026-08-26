@@ -13,6 +13,11 @@ app = FastAPI()
 # Configuration
 # -------------------------------------------------------------------
 
+# you will probably need to update this path with the location of your ffmpeg install. 
+#instructions in README.md
+FFMPEG_LOCATION = r"C:\Users\User\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin"
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
 
@@ -53,6 +58,7 @@ def download(url: str = Form(...)):
                 DOWNLOAD_DIR,
                 "%(title)s.%(ext)s"
             ),
+            "ffmpeg_location": FFMPEG_LOCATION,
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -89,7 +95,8 @@ def download(url: str = Form(...)):
 
 
     except Exception as e:
-
+        import traceback
+        traceback.print_exc()
         return f"""
         <html>
         <body style="font-family: Arial; padding: 20px;">

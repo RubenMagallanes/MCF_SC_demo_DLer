@@ -5,6 +5,12 @@ set up tailscale on both your host pc and your phone.
 activeate venv `.\venv\Scripts\Activate.ps1`
 install requirements ``
 install ffmpeg `winget install Gyan.FFmpeg`
+find the location of your ffmpeg installation with the following command: 
+```
+    Get-ChildItem "$env:LOCALAPPDATA\Microsoft\WinGet\Packages" -Directory -Recurse -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -match "Gyan.*FFmpeg|FFmpeg.*Gyan" }
+```
+paste it in to `main.py` in the variable named `FFMPEG_LOCATION`
 
 #run
 on the pc run `python main.py` to host the API.
