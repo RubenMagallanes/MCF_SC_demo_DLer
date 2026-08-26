@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 
 import yt_dlp
 import os
+import uuid
 
 
 app = FastAPI()
@@ -26,6 +27,11 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 templates = Jinja2Templates(
     directory=os.path.join(BASE_DIR, "templates")
 )
+# dict of [job ID] -> {
+#   "status": "downloading"/"error"/"done",
+#   "title": "<track title>"
+#}
+downloads = {}
 
 
 # -------------------------------------------------------------------
@@ -41,8 +47,12 @@ def index(request: Request):
     
 
     
-def run_download(url: str):
-    ydl_opts = {
+def run_download(job_id: str, url: str):
+    downloads[job_id]["status"] = "downloading"
+    downloads[job_id]["url"] = url
+
+    try:
+        ydl_opts = {
             "format": "bestaudio/best",
             "postprocessors": [
                 {
@@ -58,21 +68,46 @@ def run_download(url: str):
             "ffmpeg_location": FFMPEG_LOCATION,
         }
 
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+
+        downloads[job_id]["status"] = "done"
+        downloads[job_id]["title"] = info.get("title", "Unknown track")
+
+    except Exception as e:
+        downloads[job_id]["status"] = "error"
+        downloads[job_id]["error"] = str(e)
 
 @app.post("/download")
 def download(
     background_tasks: BackgroundTasks,
     url: str = Form(...)
 ):
-    background_tasks.add_task(run_download, url)
-
+    job_id = str(uuid.uuid4())
+    downloads[job_id] = {
+        "status": "queued"
+    }
+    
+    background_tasks.add_task(
+        run_download,
+        job_id,
+        url
+    )
+    print(f"created job with ID: {job_id}")
     return {
-        "status": "started",
-        "url": url
+        "job_id": job_id
     }
 
+@app.get("/download/{job_id}")
+def get_status(job_id: str):
+    job = downloads.get(job_id)
+
+    if job is None:
+        return {
+            "status": "unknown"
+        }
+
+    return job
 
 @app.get("/files/{filename}")
 def get_file(filename: str):

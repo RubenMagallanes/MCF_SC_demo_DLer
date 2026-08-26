@@ -55,28 +55,66 @@
 	<div id="downloads"></div>
 
 	<script>
-		const form = document.getElementById("download-form");
-		const downloads = document.getElementById("downloads");
+	const form = document.getElementById("download-form");
+	const downloads = document.getElementById("downloads");
 
-		form.addEventListener("submit", async (event) => {
-			event.preventDefault();
+	form.addEventListener("submit", async (event) => {
+		event.preventDefault();
 
-			const url = form.elements.url.value;
+		const url = form.elements.url.value;
 
-			const response = await fetch("/download", {
-				method: "POST",
-				body: new URLSearchParams({ url })
-			});
-
-			const result = await response.json();
-
-			const item = document.createElement("div");
-			item.textContent = `Downloading: ${result.url}`;
-
-			downloads.appendChild(item);
-
-			form.elements.url.value = "";
+		const response = await fetch("/download", {
+			method: "POST",
+			body: new URLSearchParams({ url })
 		});
-</script>
+
+		const result = await response.json();
+
+		const item = document.createElement("div");
+		item.textContent = "Queued...";
+
+		downloads.appendChild(item);
+
+		form.elements.url.value = "";
+
+		pollDownload(result.job_id, item);
+	});
+
+
+	async function pollDownload(jobId, element) {
+
+		const response = await fetch(`/download/${jobId}`);
+		const job = await response.json();
+
+		if (job.status === "queued") {
+			element.textContent = "Queued...";
+		}
+
+		else if (job.status === "downloading") {
+			var str = JSON.stringify(job)
+			console.log(`downloading: job: {str}`);
+			element.textContent =
+				`Downloading: ${job.url}`;
+		}
+
+		else if (job.status === "done") {
+			element.textContent =
+				`Done ✅ ${job.title}`;
+
+			return;
+		}
+
+		else if (job.status === "error") {
+			element.textContent =
+				`Error: ${job.error}`;
+
+			return;
+		}
+
+		setTimeout(() => {
+			pollDownload(jobId, element);
+		}, 1000);
+	}
+	</script>
 </body>
 </html>
