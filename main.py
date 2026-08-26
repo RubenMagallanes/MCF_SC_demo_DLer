@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Request, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 
@@ -38,14 +38,11 @@ def index(request: Request):
         request=request,
         name="index.html"
     )
+    
 
-
-@app.post("/download", response_class=HTMLResponse)
-def download(url: str = Form(...)):
-
-    try:
-
-        ydl_opts = {
+    
+def run_download(url: str):
+    ydl_opts = {
             "format": "bestaudio/best",
             "postprocessors": [
                 {
@@ -61,55 +58,20 @@ def download(url: str = Form(...)):
             "ffmpeg_location": FFMPEG_LOCATION,
         }
 
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
 
-            info = ydl.extract_info(
-                url,
-                download=True
-            )
+@app.post("/download")
+def download(
+    background_tasks: BackgroundTasks,
+    url: str = Form(...)
+):
+    background_tasks.add_task(run_download, url)
 
-            filename = ydl.prepare_filename(info)
-
-
-        return f"""
-        <html>
-        <body style="font-family: Arial; padding: 20px;">
-
-            <h2>Download complete!</h2>
-
-            <p>{info.get("title", "Track")}</p>
-
-            <a href="/files/{os.path.basename(filename)}">
-                Download file
-            </a>
-
-            <br><br>
-
-            <a href="/">
-                Download another
-            </a>
-
-        </body>
-        </html>
-        """
-
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return f"""
-        <html>
-        <body style="font-family: Arial; padding: 20px;">
-
-            <h2>Download failed</h2>
-
-            <pre>{e}</pre>
-
-            <a href="/">Try again</a>
-
-        </body>
-        </html>
-        """
+    return {
+        "status": "started",
+        "url": url
+    }
 
 
 @app.get("/files/{filename}")

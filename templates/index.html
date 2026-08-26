@@ -40,7 +40,7 @@
 
     <h1>SoundCloud Downloader</h1>
 
-    <form method="POST" action="/download">
+    <form id="download-form">
 
         <input
             type="url"
@@ -52,6 +52,31 @@
         <button type="submit">Download</button>
 
     </form>
+	<div id="downloads"></div>
 
+	<script>
+		const form = document.getElementById("download-form");
+		const downloads = document.getElementById("downloads");
+
+		form.addEventListener("submit", async (event) => {
+			event.preventDefault();
+
+			const url = form.elements.url.value;
+
+			const response = await fetch("/download", {
+				method: "POST",
+				body: new URLSearchParams({ url })
+			});
+
+			const result = await response.json();
+
+			const item = document.createElement("div");
+			item.textContent = `Downloading: ${result.url}`;
+
+			downloads.appendChild(item);
+
+			form.elements.url.value = "";
+		});
+</script>
 </body>
 </html>
