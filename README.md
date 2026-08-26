@@ -23,7 +23,7 @@ uses yt-dlp under teh hood, so it works with Soundcloud & Youtube links.
 
 ## run
 
-1. on the pc run `python main.py` to host the API.
+1. on the pc (in an admin powershell) run `python main.py` to start the server.
 2. visit the page on your phone 
     - there will be a line like this in the server output in powershell `Uvicorn running on ←[1mhttp://0.0.0.0:5000←[0m (Press CTRL+C to quit)` 
     - note the port its running on `0.0.0.0:<PORT NUMBER>`. this will be 5000 by default

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MCF's Downloader</title>
+    <title>MCF's Downloader 😼</title>
 	<link
 		rel="icon"
 		href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😼</text></svg>"
@@ -97,19 +97,19 @@
 			var str = JSON.stringify(job)
 			console.log(`downloading: job: {str}`);
 			element.textContent =
-				`Downloading: ${job.url}`;
+				`🤔 Downloading: ${job.url}`;
 		}
 
 		else if (job.status === "done") {
 			element.textContent =
-				`Done ✅ ${job.title}`;
+				`✅ Done ${job.title}`;
 
 			return;
 		}
 
 		else if (job.status === "error") {
 			element.textContent =
-				`Error: ${job.url} - ${job.error}`;
+				`❌ Error: ${job.url} - ${job.error}`;
 
 			return;
 		}
