@@ -1,3 +1,5 @@
+#follow MidnightCatFiesta on instagram and soundcloud
+
 from fastapi import FastAPI, Form, Request, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
@@ -5,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 import yt_dlp
 import os
 import uuid
+import re
 
 
 app = FastAPI()
@@ -76,7 +79,8 @@ def run_download(job_id: str, url: str):
 
     except Exception as e:
         downloads[job_id]["status"] = "error"
-        downloads[job_id]["error"] = str(e)
+        error = re.sub(r"\x1b\[[0-9;]*m", "", str(e))
+        downloads[job_id]["error"] = error
 
 @app.post("/download")
 def download(
