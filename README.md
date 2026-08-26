@@ -4,6 +4,7 @@
 set up tailscale on both your host pc and your phone.
 activeate venv `.\venv\Scripts\Activate.ps1`
 install requirements ``
+install ffmpeg `winget install Gyan.FFmpeg`
 
 #run
 on the pc run `python main.py` to host the API.

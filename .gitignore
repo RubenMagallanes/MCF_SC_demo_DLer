@@ -1,4 +1,11 @@
+# ignore everything
 *
+
+#except:
 !.gitignore
+!requirements.txt
 !README.md
 !main.py
+!templates/
+!templates/index.html
+

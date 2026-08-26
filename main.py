@@ -1,82 +1,45 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.templating import Jinja2Templates
+
 import yt_dlp
 import os
 
+
 app = FastAPI()
 
-DOWNLOAD_DIR = "downloads"
+
+# -------------------------------------------------------------------
+# Configuration
+# -------------------------------------------------------------------
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
+
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+templates = Jinja2Templates(
+    directory=os.path.join(BASE_DIR, "templates")
+)
 
-HTML = """
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SoundCloud Downloader</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 60px auto;
-            padding: 20px;
-        }
-
-        h1 {
-            margin-bottom: 30px;
-        }
-
-        input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            font-size: 16px;
-            margin-bottom: 12px;
-        }
-
-        button {
-            padding: 12px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .status {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>SoundCloud Downloader</h1>
-
-    <form method="POST" action="/download">
-        <input
-            type="url"
-            name="url"
-            placeholder="Paste SoundCloud URL"
-            required
-        >
-
-        <button type="submit">Download</button>
-    </form>
-
-</body>
-</html>
-"""
-
+# -------------------------------------------------------------------
+# Routes
+# -------------------------------------------------------------------
 
 @app.get("/", response_class=HTMLResponse)
-def index():
-    return HTML
+def index(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html"
+    )
 
 
 @app.post("/download", response_class=HTMLResponse)
 def download(url: str = Form(...)):
 
     try:
+
         ydl_opts = {
             "format": "bestaudio/best",
             "postprocessors": [
@@ -101,12 +64,9 @@ def download(url: str = Form(...)):
 
             filename = ydl.prepare_filename(info)
 
+
         return f"""
         <html>
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-        </head>
-
         <body style="font-family: Arial; padding: 20px;">
 
             <h2>Download complete!</h2>
@@ -126,6 +86,7 @@ def download(url: str = Form(...)):
         </body>
         </html>
         """
+
 
     except Exception as e:
 
@@ -147,7 +108,10 @@ def download(url: str = Form(...)):
 @app.get("/files/{filename}")
 def get_file(filename: str):
 
-    filepath = os.path.join(DOWNLOAD_DIR, filename)
+    filepath = os.path.join(
+        DOWNLOAD_DIR,
+        filename
+    )
 
     return FileResponse(
         filepath,
@@ -156,7 +120,12 @@ def get_file(filename: str):
     )
 
 
+# -------------------------------------------------------------------
+# Run server
+# -------------------------------------------------------------------
+
 if __name__ == "__main__":
+
     import uvicorn
 
     uvicorn.run(
