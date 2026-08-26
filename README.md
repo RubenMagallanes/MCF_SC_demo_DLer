@@ -2,7 +2,7 @@
 
 a simple server that sits on your home pc, exposes a webpage that you can open on your phone (via tailscale), paste in a soudcloud track link, and have the server download it to your home pc, ready for when you get home. 
 
-when im out & about shazaming songs i usually like them on soundcloud, to come back to later & download. This tool allows me to send the url to my pc to download instantly so the mp3s are ready for me when i get home.
+when im out & about shazaming songs i usually like them on soundcloud, to come back to later & download. This list of tracks for me to come back to sometimes gets quite long - this tool allows me to send the url to my pc to download instantly so the mp3s are ready for me when i get home.
 
 uses yt-dlp under teh hood, so it works with Soundcloud & Youtube links.
 

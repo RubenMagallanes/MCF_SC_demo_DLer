@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MidnightCatFiesta's Remote track Downloader</title>
+    <title>MCF's Downloader</title>
 
     <style>
         body {
@@ -38,7 +38,7 @@
 
 <body>
 
-    <h1>SoundCloud Downloader</h1>
+    <h1>MidnightCatFiesta's Remote track Downloader</h1>
 
     <form id="download-form">
 
@@ -106,7 +106,7 @@
 
 		else if (job.status === "error") {
 			element.textContent =
-				`Error: ${job.error}`;
+				`Error: ${job.url} - ${job.error}`;
 
 			return;
 		}
