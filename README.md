@@ -5,11 +5,10 @@ a simple server that sits on your home pc, exposes a webpage that you can open o
 
 
 ## setup
-set up tailscale on both your host pc and your phone.
-
+- set up tailscale on both your host pc and your phone.
 1. activeate venv `.\venv\Scripts\Activate.ps1`
-2. install requirements ``
-3. install ffmpeg `winget install Gyan.FFmpeg`
+2. install requirements `pip install -r requirements.txt`
+3. install ffmpeg (if its not already installed) `winget install Gyan.FFmpeg`
 4. find the location of your ffmpeg installation with the following command: 
 ```
     Get-ChildItem "$env:LOCALAPPDATA\Microsoft\WinGet\Packages" -Directory -Recurse -ErrorAction SilentlyContinue |
