@@ -83,6 +83,7 @@ def download(
     background_tasks: BackgroundTasks,
     url: str = Form(...)
 ):
+    url = url.strip()
     job_id = str(uuid.uuid4())
     downloads[job_id] = {
         "status": "queued"
