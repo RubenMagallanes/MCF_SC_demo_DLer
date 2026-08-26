@@ -25,7 +25,7 @@ FFMPEG_LOCATION = r"C:\Users\User\AppData\Local\Microsoft\WinGet\Packages\Gyan.F
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
-ERROR_LOG = os.path.join(DOWNLOAD_DIR, "download_error_log.txt")
+ERROR_LOG = os.path.join(DOWNLOAD_DIR, "_download_error_log.txt")
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
