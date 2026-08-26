@@ -8,6 +8,7 @@ import yt_dlp
 import os
 import uuid
 import re
+from datetime import datetime
 
 
 app = FastAPI()
@@ -24,6 +25,7 @@ FFMPEG_LOCATION = r"C:\Users\User\AppData\Local\Microsoft\WinGet\Packages\Gyan.F
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
+ERROR_LOG = os.path.join(DOWNLOAD_DIR, "download_error_log.txt")
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -32,7 +34,8 @@ templates = Jinja2Templates(
 )
 # dict of [job ID] -> {
 #   "status": "downloading"/"error"/"done",
-#   "title": "<track title>"
+#   "title": "<track title>",
+#   "url": "<the link you pasted in>" 
 #}
 downloads = {}
 
@@ -80,6 +83,14 @@ def run_download(job_id: str, url: str):
     except Exception as e:
         downloads[job_id]["status"] = "error"
         error = re.sub(r"\x1b\[[0-9;]*m", "", str(e))
+        
+        with open(ERROR_LOG, "a", encoding="utf-8") as log:
+            log.write(
+                f"{datetime.now():%Y-%m-%d %H:%M} | "
+                f"{url} | "
+                f"{error}\n"
+            )
+        
         downloads[job_id]["error"] = error
 
 @app.post("/download")
