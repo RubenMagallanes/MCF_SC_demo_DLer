@@ -51,7 +51,13 @@ def index(request: Request):
         name="index.html"
     )
     
-
+def log(url: str, msg: str):
+    with open(ERROR_LOG, "a", encoding="utf-8") as log:
+            log.write(
+                f"{datetime.now():%Y-%m-%d %H:%M} | "
+                f"{url} | "
+                f"{msg}\n"
+            )
     
 def run_download(job_id: str, url: str):
     downloads[job_id]["status"] = "downloading"
@@ -79,19 +85,13 @@ def run_download(job_id: str, url: str):
 
         downloads[job_id]["status"] = "done"
         downloads[job_id]["title"] = info.get("title", "Unknown track")
+        log(url, f"{ downloads[job_id]["title"]} downloaded successfully")
 
     except Exception as e:
         downloads[job_id]["status"] = "error"
         error = re.sub(r"\x1b\[[0-9;]*m", "", str(e))
-        
-        with open(ERROR_LOG, "a", encoding="utf-8") as log:
-            log.write(
-                f"{datetime.now():%Y-%m-%d %H:%M} | "
-                f"{url} | "
-                f"{error}\n"
-            )
-        
         downloads[job_id]["error"] = error
+        log(url, error)
 
 @app.post("/download")
 def download(
