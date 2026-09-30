@@ -2,9 +2,27 @@ import tkinter as tk
 from tkinter import ttk
 import subprocess
 import sys
+import threading
 
 
 server_process = None
+
+
+def append_output(text):
+    output.config(state="normal")
+    output.insert("end", text)
+    output.see("end")
+    output.config(state="disabled")
+
+
+def read_output():
+    while server_process is not None:
+        line = server_process.stdout.readline()
+
+        if not line:
+            break
+
+        root.after(0, append_output, line)
 
 
 def start_server():
@@ -25,6 +43,12 @@ def start_server():
     start_button.config(state="disabled")
     stop_button.config(state="normal")
 
+    threading.Thread(
+        target=read_output,
+        daemon=True
+    ).start()
+
+
 def stop_server():
     global server_process
 
@@ -38,10 +62,13 @@ def stop_server():
     start_button.config(state="normal")
     stop_button.config(state="disabled")
 
+
 def main():
+    global root
     global status
     global start_button
     global stop_button
+    global output
 
     root = tk.Tk()
     root.title("SoundCloud Downloader Server")
