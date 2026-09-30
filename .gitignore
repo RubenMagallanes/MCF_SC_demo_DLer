@@ -6,6 +6,7 @@
 !requirements.txt
 !README.md
 !main.py
+!GUI.py
 !templates/
 !templates/index.html
 
