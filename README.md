@@ -5,6 +5,8 @@ a simple server that sits on your home pc, exposes a webpage that you can open o
 when im out & about shazaming songs i usually like them on soundcloud, to come back to later & download. This list of tracks for me to come back to sometimes gets quite long - this tool allows me to send the url to my pc to download instantly so the mp3s are ready for me when i get home.
 
 uses yt-dlp under teh hood, so it works with Soundcloud & Youtube links.
+I'm pretty sure the code is cross platform.
+(the below command to install & locate ffmpeg wont work ofc)
 
 
 
