@@ -1,8 +1,48 @@
 import tkinter as tk
 from tkinter import ttk
+import subprocess
+import sys
 
+
+server_process = None
+
+
+def start_server():
+    global server_process
+
+    if server_process is not None:
+        return
+
+    server_process = subprocess.Popen(
+        [sys.executable, "main.py"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1
+    )
+
+    status.config(text="Status: RUNNING")
+    start_button.config(state="disabled")
+    stop_button.config(state="normal")
+
+def stop_server():
+    global server_process
+
+    if server_process is None:
+        return
+
+    server_process.terminate()
+    server_process = None
+
+    status.config(text="Status: STOPPED")
+    start_button.config(state="normal")
+    stop_button.config(state="disabled")
 
 def main():
+    global status
+    global start_button
+    global stop_button
+
     root = tk.Tk()
     root.title("SoundCloud Downloader Server")
     root.geometry("700x500")
@@ -26,13 +66,16 @@ def main():
 
     start_button = ttk.Button(
         button_frame,
-        text="Start Server"
+        text="Start Server",
+        command=start_server
     )
     start_button.pack(side="left", padx=5)
 
     stop_button = ttk.Button(
         button_frame,
-        text="Stop Server"
+        text="Stop Server",
+        command=stop_server,
+        state="disabled"
     )
     stop_button.pack(side="left", padx=5)
 
@@ -53,5 +96,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
     
