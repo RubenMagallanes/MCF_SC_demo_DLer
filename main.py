@@ -50,6 +50,7 @@ app = FastAPI()
 
 # you will probably need to update this path with the location of your ffmpeg install. 
 #instructions in README.md
+#currently the only platform specific thing in this project
 FFMPEG_LOCATION = r"C:\Users\User\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")

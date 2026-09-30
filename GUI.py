@@ -1,12 +1,28 @@
 import tkinter as tk
 from tkinter import ttk
 import subprocess
+import platform
 import sys
 import threading
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
 
 server_process = None
 
+def open_downloads_folder():
+    if platform.system() == "Windows":
+        os.startfile(DOWNLOAD_DIR)
+
+    elif platform.system() == "Darwin":
+        subprocess.Popen(["open", DOWNLOAD_DIR])
+
+    elif system == "Linux":
+        subprocess.Popen(["xdg-open", DOWNLOAD_DIR])
+
+    else:
+        print(f"Unsupported operating system: {system}. consider implementing this & submitting a pull request :)")
 
 def append_output(text):
     output.config(state="normal")
@@ -105,6 +121,13 @@ def main():
         state="disabled"
     )
     stop_button.pack(side="left", padx=5)
+    
+    downloads_button = ttk.Button(
+        button_frame,
+        text="Open Downloads Folder",
+        command=open_downloads_folder
+    )
+    downloads_button.pack(side="left", padx=5)
 
     output = tk.Text(
         root,
