@@ -11,21 +11,23 @@ I'm pretty sure the code is cross platform.
 
 
 ## setup
-- set up tailscale on both your host pc and your phone.
-1. activeate venv `.\venv\Scripts\Activate.ps1`
-2. install requirements `pip install -r requirements.txt`
-3. install ffmpeg (if its not already installed) `winget install Gyan.FFmpeg`
-4. find the location of your ffmpeg installation with the following command: 
+1. set up tailscale on both your host pc and your phone.
+2. create new venv `python -m venv venv`
+2. activate venv `.\venv\Scripts\Activate.ps1`
+3. install requirements `pip install -r requirements.txt`
+4. install ffmpeg (if its not already installed) `winget install Gyan.FFmpeg`
+5. find the location of your ffmpeg installation with the following command: 
 ```
     Get-ChildItem "$env:LOCALAPPDATA\Microsoft\WinGet\Packages" -Directory -Recurse -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -match "Gyan.*FFmpeg|FFmpeg.*Gyan" }
 ```
-5. paste it in to `main.py` in the variable named `FFMPEG_LOCATION`
-6. follow MidnightCatFiesta on instgram and soundcloud! 😼
+6. paste it in to `main.py` in the variable named `FFMPEG_LOCATION`
+7. follow MidnightCatFiesta on instgram and soundcloud! 😼
 
 ## run
 
-1. on the pc (in an admin powershell) run `python main.py` to start the server.
+1. on the pc (in an admin powershell): activate the venv `.\venv\Scripts\Activate.ps1` then run `python main.py` to start the server. Alternatively, run `python GUI.py` for a gui. If you're on windows, just double click `RUN_GUI.bat` to do this automatically
+
 2. visit the page on your phone 
     - there will be a line like this in the server output in powershell `Uvicorn running on ←[1mhttp://0.0.0.0:5000←[0m (Press CTRL+C to quit)` 
     - note the port its running on `0.0.0.0:<PORT NUMBER>`. this will be 5000 by default
@@ -33,7 +35,9 @@ I'm pretty sure the code is cross platform.
     - on your phone, visit the page by sticking together the ip address and the port number like so `100.108.170.250:5000` (with your computers tailscale ip addr isntead)
 
 3. paste the soundcloud track url in to the input box and the server will download it to your pc if a stream is available
-4. the track should appear on your pc in a downloads folder thats created wherever you ran python from 
+4. the track should appear on your pc in a downloads folder thats created wherever you ran python from. 
+
+
 
 note: some tracks cant be downloaded due to DRM protection. 
 
