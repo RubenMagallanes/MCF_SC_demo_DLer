@@ -1,18 +1,20 @@
-#follow MidnightCatFiesta on instagram and soundcloud
+#follow MidnightCatFiesta on instagram and soundcloud :)
+#    |\__/,|   (`\
+#  _.|o o  |_   ) )
+#-(((---(((--------
 
 from fastapi import FastAPI, Form, Request, BackgroundTasks
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 
+import uvicorn
 import yt_dlp
 import os
 import uuid
 import re
 from datetime import datetime
 
-
 app = FastAPI()
-
 
 # -------------------------------------------------------------------
 # Configuration
@@ -21,11 +23,9 @@ app = FastAPI()
 # you will probably need to update this path with the location of your ffmpeg install. 
 #instructions in README.md
 FFMPEG_LOCATION = r"C:\Users\User\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-full_build\bin"
-
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
-ERROR_LOG = os.path.join(DOWNLOAD_DIR, "_download_error_log.txt")
+ERROR_LOG_DIR = os.path.join(DOWNLOAD_DIR, "_download_error_log.txt")
 
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -52,7 +52,7 @@ def index(request: Request):
     )
     
 def log(url: str, msg: str):
-    with open(ERROR_LOG, "a", encoding="utf-8") as log:
+    with open(ERROR_LOG_DIR, "a", encoding="utf-8") as log:
             log.write(
                 f"{datetime.now():%Y-%m-%d %H:%M} | "
                 f"{url} | "
@@ -127,7 +127,6 @@ def get_status(job_id: str):
 
 @app.get("/files/{filename}")
 def get_file(filename: str):
-
     filepath = os.path.join(
         DOWNLOAD_DIR,
         filename
@@ -139,15 +138,11 @@ def get_file(filename: str):
         media_type="application/octet-stream"
     )
 
-
 # -------------------------------------------------------------------
 # Run server
 # -------------------------------------------------------------------
 
 if __name__ == "__main__":
-
-    import uvicorn
-
     uvicorn.run(
         app,
         host="0.0.0.0",
