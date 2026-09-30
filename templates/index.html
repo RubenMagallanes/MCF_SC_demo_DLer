@@ -85,7 +85,6 @@
 
 
 	async function pollDownload(jobId, element) {
-
 		const response = await fetch(`/download/${jobId}`);
 		const job = await response.json();
 
@@ -94,8 +93,7 @@
 		}
 
 		else if (job.status === "downloading") {
-			var str = JSON.stringify(job)
-			console.log(`downloading: job: {str}`);
+			console.log(`downloading: job:`, job);
 			element.textContent =
 				`🤔 Downloading: ${job.url}`;
 		}

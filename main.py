@@ -60,6 +60,7 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 templates = Jinja2Templates(
     directory=os.path.join(BASE_DIR, "templates")
 )
+
 # dict of [job ID] -> {
 #   "status": "downloading"/"error"/"done",
 #   "title": "<track title>",
