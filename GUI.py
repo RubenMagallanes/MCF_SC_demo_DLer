@@ -5,6 +5,7 @@ import platform
 import sys
 import threading
 import os
+import webbrowser
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
@@ -78,6 +79,8 @@ def stop_server():
     start_button.config(state="normal")
     stop_button.config(state="disabled")
 
+def open_site():
+    webbrowser.open("http://localhost:5000")
 
 def main():
     global root
@@ -128,6 +131,13 @@ def main():
         command=open_downloads_folder
     )
     downloads_button.pack(side="left", padx=5)
+    
+    site_button = ttk.Button(
+        button_frame,
+        text="Open download site",
+        command=open_site
+    )
+    site_button.pack(side="left", padx=5)
 
     output = tk.Text(
         root,
